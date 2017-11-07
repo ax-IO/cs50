@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 //Implémentation de fonction
+long long expo (int a, int b);
 int longueur (long long n);
 int digit (long long n, int k);
 int checksum (long long n);
@@ -37,6 +38,15 @@ int main (void)
 
 ///////////FONCTIONS////////////////
 
+long long expo (int a, int b)
+{
+    long long c = a;
+    for (int i=1; i<b; i++)
+    {
+        c *= a;
+    }
+    return c;
+}
 
 //retourne le nombre de digits
 int longueur (long long n)
@@ -68,5 +78,5 @@ int checksum (long long n)
 //retourne le k digit en partant du début
 int digit (long long n, int k)
 {
-    return (n/(10^(longueur(n)-k)))%10;
+    return (n/expo(10, longueur(n)-k) )%10;
 }
