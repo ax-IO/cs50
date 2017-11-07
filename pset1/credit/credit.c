@@ -3,8 +3,8 @@
 
 //Implémentation de fonction
 int longueur (long long n);
-int checksum (long long n);
 int digit (long long n, int k);
+int checksum (long long n);
 
 
 ///////////FONCTION PRINCIPALE////////////////
@@ -12,9 +12,11 @@ int digit (long long n, int k);
 int main (void)
 {
     long long number = get_long_long("Number: ");
-
     int nbe_digit = longueur (number);
     printf("le nombre comporte %d digits !\n", nbe_digit);
+
+    printf("Le 3ème digit est : %d \n", digit(number, 3));
+    printf("Le 6ème digit est : %d \n", digit(number, 6));
 
 //Test du checksum
     if (checksum (number) % 10 != 0)
@@ -66,7 +68,5 @@ int checksum (long long n)
 //retourne le k digit en partant du début
 int digit (long long n, int k)
 {
-    int l = longueur (n) ;
-    printf("k=%d et %d",k,l);
-    return 0;
+    return (n/(10^(longueur(n)-k)))%10;
 }
