@@ -16,21 +16,43 @@ int main (void)
     int nbe_digit = longueur (number);
     printf("le nombre comporte %d digits !\n", nbe_digit);
 
-    printf("Le 3ème digit est : %d \n", digit(number, 3));
-    printf("Le 6ème digit est : %d \n", digit(number, 6));
 
-//Test du checksum
-    if (checksum (number) % 10 != 0)
+//Vérification de la validité de la carte
+    if ((checksum (number) % 10 ) == 0 )     //appel de la fonction "checksum" qui retourne un nombre issu d'un argorithme de Luhn
     {
-        if (nbe_digit == 15 && digit (number, 1) == 3)
+        //AMEX : 15 digits
+        //Start with 34, 37
+
+        if (nbe_digit == 15 && (digit (number, 1) == 3 ) && ((digit (number, 2) == 4) || (digit (number, 2) == 7 )))
         {
-            ;
+           printf("AMEX\n") ;
+        }
+
+        //Mastercard : 16 digits
+        //Start with 51, 52, 53, 54, 55
+
+        else if (nbe_digit == 16 && (digit (number, 1) == 5 ) && ((digit (number, 2) == 1) || (digit (number, 2) == 2 ) || (digit (number, 2) == 3 ) || (digit (number, 2) == 4 ) || (digit (number, 2) == 5 )))
+        {
+            printf("MASTERCARD\n");
+        }
+
+        //Visa : 13 ou 16 digits
+        //Start with 4
+
+        else if (((nbe_digit == 13) || (nbe_digit == 13)) && (digit (number, 1) == 3 ))
+        {
+            printf("VISA\n");
+        }
+        else
+        {
+            printf("INVALID\n");
         }
     }
     else
     {
-        ;
+        printf("INVALID\n");
     }
+
     return 0;
 }
 
@@ -74,6 +96,7 @@ int checksum (long long n)
         return 1; // cas où le nombre est impair
     }
 }
+
 
 //retourne le k digit en partant du début
 int digit (long long n, int k)
