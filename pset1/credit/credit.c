@@ -14,9 +14,9 @@ int main (void)
 {
     long long number = get_long_long("Number: ");
     int nbe_digit = longueur (number);
-    printf("le nombre comporte %d digits !\n", nbe_digit);
+    /*printf("le nombre comporte %d digits !\n", nbe_digit);
     printf("le dernier digits est : %d \n", digit(number, longueur (number)));
-    printf("Le checksum = %d \n", checksum(number));
+    printf("Le checksum = %d \n", checksum(number));*/
 
 //Vérification de la validité de la carte
     if ((checksum (number) % 10 ) == 0 )     //appel de la fonction "checksum" qui retourne un nombre issu d'un argorithme de Luhn
@@ -40,7 +40,7 @@ int main (void)
         //Visa : 13 ou 16 digits
         //Start with 4
 
-        else if (((nbe_digit == 13) || (nbe_digit == 13)) && (digit (number, 1) == 3 ))
+        else if (((nbe_digit == 13) || (nbe_digit == 16)) && (digit (number, 1) == 4 ))
         {
             printf("VISA\n");
         }
@@ -104,7 +104,7 @@ int checksum (long long n)
 {
     int l = longueur (n);
     int sum = 0;
-    for (int i=2; i<=l; i +=2)
+    for (int i=1+(l%2); i<=l; i +=2)
     {
         if (digit (n, i) * 2 < 10)
         {
@@ -114,12 +114,12 @@ int checksum (long long n)
         {
             sum = sum + ((digit (n, i) * 2 )% 10) + 1;
         }
-        printf ("%d ) sum = %d \n", i, sum);
+        //printf ("%d ) sum = %d \n", i, sum);
     }
-    for (int i=1; i<=l; i +=2)
+    for (int i=2 - l%2; i<=l; i +=2)
     {
         sum += digit (n, i);
-        printf ("%d ) sum = %d \n", i, sum);
+        //printf ("%d ) sum = %d \n", i, sum);
     }
         return sum;
 }
