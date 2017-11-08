@@ -15,7 +15,8 @@ int main (void)
     long long number = get_long_long("Number: ");
     int nbe_digit = longueur (number);
     printf("le nombre comporte %d digits !\n", nbe_digit);
-
+    printf("le dernier digits est : %d \n", digit(number, longueur (number)));
+    printf("Le checksum = %d \n", checksum(number));
 
 //Vérification de la validité de la carte
     if ((checksum (number) % 10 ) == 0 )     //appel de la fonction "checksum" qui retourne un nombre issu d'un argorithme de Luhn
@@ -63,11 +64,19 @@ int main (void)
 long long expo (int a, int b)
 {
     long long c = a;
-    for (int i=1; i<b; i++)
+
+    if (b==0)
     {
-        c *= a;
+        return 1;
     }
+    else
+    {
+        for (int i=1; i<b; i++)
+        {
+            c *= a;
+        }
     return c;
+    }
 }
 
 //retourne le nombre de digits
@@ -83,23 +92,34 @@ int longueur (long long n)
 }
 
 
-//retourne le nombre obtenu par le Luhn’s algorithm
-int checksum (long long n)
-{
-    int l = longueur (n);
-    if (l % 2 == 0)
-    {
-        return 0; //cas ou le nombre est pair
-    }
-    else
-    {
-        return 1; // cas où le nombre est impair
-    }
-}
-
-
 //retourne le k digit en partant du début
 int digit (long long n, int k)
 {
     return (n/expo(10, longueur(n)-k) )%10;
+}
+
+
+//retourne le nombre obtenu par le Luhn’s algorithm
+int checksum (long long n)
+{
+    int l = longueur (n);
+    int sum = 0;
+    for (int i=2; i<=l; i +=2)
+    {
+        if (digit (n, i) * 2 < 10)
+        {
+            sum += digit (n, i) * 2;
+        }
+        else
+        {
+            sum = sum + ((digit (n, i) * 2 )% 10) + 1;
+        }
+        printf ("%d ) sum = %d \n", i, sum);
+    }
+    for (int i=1; i<=l; i +=2)
+    {
+        sum += digit (n, i);
+        printf ("%d ) sum = %d \n", i, sum);
+    }
+        return sum;
 }
