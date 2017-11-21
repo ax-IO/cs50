@@ -19,20 +19,25 @@ int main (void)
     printf("Le checksum = %d \n", checksum(number));*/
 
 //Vérification de la validité de la carte
-    if ((checksum (number) % 10 ) == 0 )     //appel de la fonction "checksum" qui retourne un nombre issu d'un argorithme de Luhn
+    if ((checksum (number) % 10 ) ==
+        0 )    //appel de la fonction "checksum" qui retourne un nombre issu d'un argorithme de Luhn
     {
         //AMEX : 15 digits
         //Start with 34, 37
 
-        if (nbe_digit == 15 && (digit (number, 1) == 3 ) && ((digit (number, 2) == 4) || (digit (number, 2) == 7 )))
+        if (nbe_digit == 15 && (digit (number, 1) == 3 ) && ((digit (number, 2) == 4)
+                || (digit (number, 2) == 7 )))
         {
-           printf("AMEX\n") ;
+            printf("AMEX\n") ;
         }
 
         //Mastercard : 16 digits
         //Start with 51, 52, 53, 54, 55
 
-        else if (nbe_digit == 16 && (digit (number, 1) == 5 ) && ((digit (number, 2) == 1) || (digit (number, 2) == 2 ) || (digit (number, 2) == 3 ) || (digit (number, 2) == 4 ) || (digit (number, 2) == 5 )))
+        else if (nbe_digit == 16 && (digit (number, 1) == 5 ) && ((digit (number, 2) == 1)
+                 || (digit (number, 2) == 2 ) || (digit (number, 2) == 3 )
+                 || (digit (number, 2) == 4 )
+                 || (digit (number, 2) == 5 )))
         {
             printf("MASTERCARD\n");
         }
@@ -65,17 +70,17 @@ long long expo (int a, int b)
 {
     long long c = a;
 
-    if (b==0)
+    if (b == 0)
     {
         return 1;
     }
     else
     {
-        for (int i=1; i<b; i++)
+        for (int i = 1; i < b; i++)
         {
             c *= a;
         }
-    return c;
+        return c;
     }
 }
 
@@ -85,17 +90,17 @@ int longueur (long long n)
     int l = 0;
     while (n >= 10)
     {
-        n/=10;
+        n /= 10;
         l++;
     }
-    return l+1;
+    return l + 1;
 }
 
 
 //retourne le k digit en partant du début
 int digit (long long n, int k)
 {
-    return (n/expo(10, longueur(n)-k) )%10;
+    return (n / expo(10, longueur(n) - k) ) % 10;
 }
 
 
@@ -104,7 +109,7 @@ int checksum (long long n)
 {
     int l = longueur (n);
     int sum = 0;
-    for (int i=1+(l%2); i<=l; i +=2)
+    for (int i = 1 + (l % 2); i <= l; i += 2)
     {
         if (digit (n, i) * 2 < 10)
         {
@@ -112,14 +117,14 @@ int checksum (long long n)
         }
         else
         {
-            sum = sum + ((digit (n, i) * 2 )% 10) + 1;
+            sum = sum + ((digit (n, i) * 2 ) % 10) + 1;
         }
         //printf ("%d ) sum = %d \n", i, sum);
     }
-    for (int i=2 - l%2; i<=l; i +=2)
+    for (int i = 2 - l % 2; i <= l; i += 2)
     {
         sum += digit (n, i);
         //printf ("%d ) sum = %d \n", i, sum);
     }
-        return sum;
+    return sum;
 }
