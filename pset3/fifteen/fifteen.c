@@ -29,6 +29,9 @@ int board[DIM_MAX][DIM_MAX];
 // dimensions
 int d;
 
+int zero_i;
+int zero_j;
+
 // prototypes
 void clear(void);
 void greet(void);
@@ -67,7 +70,7 @@ int main(int argc, string argv[])
 
     // initialize the board
     init();
-
+    zero_i = zero_j = d - 1;
     // accept moves until game is won
     while (true)
     {
@@ -118,7 +121,7 @@ int main(int argc, string argv[])
         if (!move(tile))
         {
             printf("\nIllegal move.\n");
-            usleep(50000);
+            usleep(500000);
         }
 
         // sleep thread for animation's sake
@@ -185,25 +188,25 @@ void init(void)
 void draw(void)
 {
     for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
         {
-            for (int j = 0; j < d; j++)
+            if (board[i][j] == 0)
             {
-                if (board[i][j] == 0)
-                {
-                    printf("_");
-                }
-                else
-                {
-                    printf("%2i", board[i][j]);
-                }
-
-                if (j < d - 1)
-                {
-                    printf("\t");
-                }
+                printf("_");
             }
-            printf("\n");
+            else
+            {
+                printf("%2i", board[i][j]);
+            }
+
+            if (j < d - 1)
+            {
+                printf("\t");
+            }
         }
+        printf("\n");
+    }
 }
 
 /**
@@ -212,8 +215,46 @@ void draw(void)
  */
 bool move(int tile)
 {
-    // TODO
+    // 1. FIND THE NUMBER
+    int a, b ;
+    // if (board[zero_i][zero_j] != 0)
+    // {
+    //     return false;
+    // }
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
+        {
+            if (board[i][j] == tile)
+            {
+                a = i;
+                b = j;
+                goto exist;
+            }
+        }
+    }
     return false;
+
+    // 2. VERIFY IF THE TILE IS ADJACENT TO THE BLANK SPACE
+    exist:
+    if ((board[a][abs(b - 1)] == 0) //left
+    || ((board[a][b % d + 1] == 0) && (b < d - 1))  //right
+    || (board[abs(a - 1)][b] == 0)  //top
+    || ((board[a % d + 1][b] == 0) && (a < d - 1))) //bottom
+    //a + b == zero_i + zero_j +ou-1
+    {
+        // 3. SWAP NUMBER <--> BLANK SPACE (0 or '_')
+        board[zero_i][zero_j] = tile ;
+        board[a][b] = 0;
+        zero_i = a;
+        zero_j = b;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
 /**
@@ -222,6 +263,36 @@ bool move(int tile)
  */
 bool won(void)
 {
-    // TODO
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
+        {
+            if ((j == d - 1 && i == d - 1)
+            && (board[i][j-1] == d * d - 1))
+            {
+                return true;
+            }
+            if ((board[0][0] == 1) && (i == 0 && j == 0))
+            {
+                continue;
+            }
+            if ((j == 0 && i > 0)
+            && (board [i][j] == board[i-1][d-1] + 1))
+            {
+                continue;
+            }
+            else
+            {
+                if (board[i][j] == board[i][j-1] +1)
+                {
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+    }
     return false;
 }

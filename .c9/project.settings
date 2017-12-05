@@ -1,9 +1,9 @@
 {
     "cs50": {
         "debug": {
-            "@name": {},
-            "@pid": {},
-            "@proxy": {},
+            "@name": null,
+            "@pid": null,
+            "@proxy": null,
             "@ver": 10
         },
         "info": {
