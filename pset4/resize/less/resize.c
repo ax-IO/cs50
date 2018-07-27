@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     char *outfile = argv[3];
 
     //Ensure n is correct
-    if ( n <= 0 || n > 100)
+    if (n <= 0 || n > 100)
     {
         fprintf(stderr, "the first argument (n) must be a positive integer less than or equal to 100\n");
         return 1;
@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
     // Test if the enlarge file will not exceed long  capacity
-    if (n * bi.biHeight > pow(2, 8 * sizeof(long)) - 1 ||  \
-        n * bi.biWidth > pow(2, 8 * sizeof(long)) - 1 )
+    if (bi.biHeight > pow(2, 8 * sizeof(long)) - 1 ||  \
+        bi.biWidth > pow(2, 8 * sizeof(long)) - 1)
     {
         fprintf(stderr, "too large for a 24bit BMP file\n");
         return 5;
@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight / n); i < biHeight; i++)
     {
+        RGBTRIPLE *array = malloc(bi.biWidth * sizeof(RGBTRIPLE));
         // iterate over pixels in scanline
         for (int j = 0; j < bi.biWidth / n; j++)
         {
@@ -98,22 +99,26 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            // write RGB triple to outfile
-            for (int k = 0; k < n; k++)
+            // write RGB triple to array
+            for (int k = 0; k < n ; k++)
             {
-                fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+                array[(n * j) + k] = triple;
             }
 
         }
+        for (int j = 0; j < n; j++)
+        {
+            fwrite(array, bi.biWidth * sizeof(RGBTRIPLE), 1, outptr);
 
+            // then add it back (to demonstrate how)
+            for (int k = 0; k < padding; k++)
+            {
+                fputc(0x00, outptr);
+            }
+        }
         // skip over padding, if any
         fseek(inptr, old_padding, SEEK_CUR);
-
-        // then add it back (to demonstrate how)
-        for (int k = 0; k < padding; k++)
-        {
-            fputc(0x00, outptr);
-        }
+        free(array);
     }
 
     // close infile
